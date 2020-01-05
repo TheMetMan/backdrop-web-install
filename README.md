@@ -1,17 +1,17 @@
 # Install Backdrop using drush 8 
-THis is a collection of Bash and php Scripts to install a new Backdrop site using Drush for File Based Workflow in a little over Three Minutes.
+This is a collection of Bash and php Scripts to install a new Backdrop site using Drush for File Based Workflow in a little over Three Minutes.
 
 # Preamble
-I am not the only one to have become somewhat disenchanted with Drupal 8. It has become increasingly difficult to keep up to date without problems for Non-Profit Organmisations. As a single developer I have decided to move to Backdrop and develop my own scrips to manage updates.
+I am not the only one to have become somewhat disenchanted with Drupal 8. It has become increasingly difficult to keep up to date without problems for Non-Profit Organisations. As a single developer I have decided to move to Backdrop and develop my own scrips to manage updates.
 This project came from an attempt to develop a File Based Workflow using Git, Bash and Drupal 8 and is developed from TheMetMan/drupal8_install also on GitHub. This one however used Drush version 8 with the Backdrop scripts found [here](https://github.com/backdrop-contrib/drush). 
-We have found that installing Backdrop using Drush on the Local site, then update Locally. We then used Git and a clever script or two to push/pull the Content and Config via a remote repo to Dev (Staged) and Production seemed to work well.
+We install Backdrop using Drush on the Local site, then update Locally. We then used Git and a clever script or two to push/pull the Content and Config via a remote repo to Dev (Staged) and Production seemed to work well.
 We had to develop a hack to prevent the site details overwriting each other. Not too dificult once the workflow was established.
 This is why we developed this script which will Install a Backdrop Site to the location of your choice, and in only a little over three minutes.
 
 # Requirements
 This is for Linux Only. We have not considered Windows. It will probably work on a Mac, but we have not tested it.
-You will need to have already installed Drush 8 and Git globally.
-You will also need a Virtual Host in the web Server (Apache)setup to match your site. Set the DocumentRoot to be the Install Folder.
+You will need to have already installed Drush 8 with the Backdrop Commands (as above) and Git globally.
+You will also need a Virtual Host in the web Server (eg Apache) setup to match your site. Set the DocumentRoot to be the Install Folder.
 The install puts a .htaccess file in the DocRoot to make the web/ folder the DocRoot and then correcting some settings in the web/.htaccess and web/settings.php files to also make this work.
 You will need a database (mysql) ready to accept the installation.
 
@@ -61,7 +61,7 @@ Then
 `git add -A`
 `git commit -am "add your commit tect here"`
 `git push origin master`
-Now go to the Dev site, say.
+Now go to the Dev site.
 `git checkout -b update`
 `git pull origin master`
 `./importConfigSync`
@@ -77,6 +77,4 @@ Then test the site. It should match the local site. If all is OK
 
 You can then repeat this for the Prod Site.
 ------------------------------------------------------------------------------------
-In real life, you will probably have content added to Production, so will need to reverse the process and pull down to Local before doing updates and testing, then uploading to Dev and PRoduction.
-
-
+In real life, you will probably have content added to Production, so will need to reverse the process and pull down to Local before doing updates and testing, then uploading to Dev and Production.
