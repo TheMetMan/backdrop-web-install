@@ -1,0 +1,50 @@
+#!/bin/bash
+#
+# Script to overwrite items from system.core.json file with ignored settings
+# then Sync the database you choose, then
+# Import Backdrop Settings using Drush 8
+#
+./backupEssestials SITEFOLDER
+echo "Importing the Settings from config/staging"
+echo
+echo "Removing Unnecessary Settings"
+php config/ignoreSettings.php
+echo
+echo
+options=("Dev Database" "Prod Database" "No Database")
+echo "Select which Database to import"
+select opt in "${options[@]}"
+do
+    case $opt in
+        "Dev Database")
+	    echo "Importing the Dev Db"
+	    gunzip config/dev_db/database.sql.gz
+	    mysql -u DATABASE_USER_NAME -pDATABASE_PASSWORD DATABASE < config/dev_db/database.sql
+	    gzip config/dev_db/database.sql
+            break
+            ;;
+        "Prod Database")
+	    echo "Importing the Prod Db"
+	    gunzip config/prod_db/database.sql.gz
+	    mysql -u DATABASE_USER_NAME -pDATABASE_PASSWORD DATABASE < config/prod_db/database.sql
+	    gzip config/prod_db/database.sql
+            break
+            ;;
+        "No Database")
+            echo "No Db"
+            break
+            ;;
+    esac
+done
+cd web
+drush updb
+drush cc all
+drush bcim
+echo
+drush updb
+drush cc all
+git stash
+echo "Finished - Ready to test the updates"
+echo
+
+

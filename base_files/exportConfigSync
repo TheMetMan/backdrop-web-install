@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# Script to backup the database and any files you want
+# then copy the database to the config colder
+# then Export Drupal Settings using Drush 8
+#
+./backupEssentials SITEFOLDER &&
+echo "Exporting the Settings to config/staging"
+echo
+cd web
+# MAKE SURE YOU CHOSE THE CORRECT FOLDER HERE FOR YOUR SITE
+drush sql-dump --gzip --result-file="../config/local_db/database.sql"
+drush bcex -y
+echo
+echo "Some Settings will transfer this site data eg Title, Branding emails etc"
+echo "which we do NOT Want, but the importConfigSync script takes care of this"
+echo
+echo
+echo "Finished - Ready to git commit -am ..... and push"
+echo
+echo "Then having pushed, on the remote site, "
+echo "then git checkout update and git pull origin master" 
+echo "and then importConfigSync to finish the job"
+echo
+

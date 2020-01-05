@@ -1,0 +1,4 @@
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^SITEFOLDER$ [NC,OR]
+RewriteRule ^(.*+)$ web/$1 [L,QSA]
+

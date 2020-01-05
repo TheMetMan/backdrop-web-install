@@ -1,0 +1,59 @@
+# the .gitignore file
+# taken from 
+# https://drupal.stackexchange.com/questions/193226/gitignore-file-setup-for-acquia-cloud
+# and modified
+#
+# This file contains default .gitignore rules. To use it, copy it to .gitignore,
+# and it will cause files like your settings.php and user-uploaded files to be
+# excluded from Git version control. This is a common strategy to avoid
+# accidentally including private information in public repositories and patch
+# files.
+#
+# Needed by Drush import export scripts and are specific to each site
+config/active
+exportConfigSync
+importConfigSync
+FixPermissions
+
+#ignore Logs
+logs/*
+# Ignore configuration files that may contain sensitive information.
+web/*settings*.php
+
+web/files/color
+web/files/js
+web/files/css
+web/files/styles
+web/robots.txt
+web/index.php
+
+.editorconfig
+
+.htaccess
+**/.git
+
+# LetsEncrypt files
+.well-known/
+
+# Ignore default text files
+**/CHANGELOG.txt
+**/COPYRIGHT.txt
+**/INSTALL*.txt
+**/LICENSE*
+**/MAINTAINERS.txt
+**/UPGRADE.txt
+**/README*
+
+# ------------------------------------------------------------------------------
+# Linux
+# ------------------------------------------------------------------------------
+
+# Tilde files.
+*~
+
+# KDE directory preferences.
+.directory
+
+# Linux trash folder which might appear on any partition or disk.
+.Trash-*
+

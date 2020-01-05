@@ -1,0 +1,30 @@
+#!/bin/bash
+#script from Drupal.org site Permissions document
+# https://drupal.org/node/244924
+#
+# MUST be run a s root if changing ownership of files
+#
+echo "Setting Permissions and Ownership on this Site"
+chown -Rv francis:apache .
+echo "Setting all directories to 755"
+find . -type d -exec chmod u=rwx,g=rx,o=rx '{}' \+
+echo "Setting all files to 644"
+find . -type f -exec chmod u=rw,g=r,o=r '{}' \+
+echo "Special Permissions on config, private and files"
+chmod 775 web/files
+for x in web/files; do
+  find ${x} -type d -exec chmod ug=rwx,o=rx '{}' \+
+  find ${x} -type f -exec chmod ug=rw,o=r '{}' \+
+done
+find config -type d -exec chmod ug=rwx,o=rx '{}' \+
+find config -type f -exec chmod ug=rw,o=r '{}' \+
+chmod 770 private
+echo "Setting settings.php file to 440"
+chmod 440 web/settings.php
+echo "Setting all .htaccess files 444"
+find . -type f -name .htaccess -exec chmod u=r,g=r,o=r '{}' \+
+echo "Setting FixPermissions to 750"
+chmod 750 FixPermissions
+chmod 750 backupEssentials
+chmod 700 *ConfigSync
+
