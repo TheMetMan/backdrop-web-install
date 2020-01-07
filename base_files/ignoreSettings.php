@@ -14,17 +14,21 @@ $targetFile = $rootDir . "/config/staging/system.core.json";
 $tempFile = $rootDir . "/system.core.json";
 $f = file_get_contents($sourceFile, "r");
 $parts = explode("\n", $f);
+# THis takes care of caching in local, Dev and Prod,
+# and the site details
 $patternArray = array(
-    '/\"cache\":/',
-    '/\"site_name\":/',
-    '/\"site_mail\":/',
-    '/\"site_slogan\":/'
+    'cache',
+    'preprocess_css',
+    'preprocess_js',
+    'site_name',
+    'site_mail',
+    'site_slogan'
 );
 $sourceItems = array();
 # get the source items into the array
 foreach ($parts as &$line) {
     foreach ($patternArray as &$pattern)
-        if (preg_match($pattern, $line)) {
+        if (preg_match('/\"' . $pattern . '\":/', $line)) {
             array_push($sourceItems, $line);
         }
 }
@@ -45,3 +49,4 @@ fclose($tf);
 # and overwrite the target file
 rename($tempFile, $targetFile);
 ?>
+
