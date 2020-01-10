@@ -34,12 +34,19 @@ askfg(){
 }       # End of ask()
 #
 ############ Import Config
-configFile=config.cfg
+configFile=config.cfg.fg
 if [ -e "$configFile" ]; then
   source $configFile
 else
-  echo "I cannot find the Config File $configFile"
-  exit 1
+  echo "I cannot find the Config File $configFile so using the default config.cfg"
+  configFile=config.cfg
+  source = $configFile
+fi
+if [ -e "$configFile" ]; then
+    source $configFile
+  else
+    echo "I cannot find the Config File $configFile so I cannot continue"
+    exit 1
 fi
 #-----------------------------------------------------------------------------
 cd $apacheRoot
