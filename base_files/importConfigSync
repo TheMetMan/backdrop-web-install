@@ -4,47 +4,38 @@
 # then Sync the database you choose, then
 # Import Backdrop Settings using Drush 8
 #
+# Backup the site Database and Settings
 ./backupEssestials SITEFOLDER
 echo "Importing the Settings from config/staging"
 echo
-echo "Removing Unnecessary Settings"
+echo "Removing Unnecessary Settings from system.core.json"
 php config/ignoreSettings.php
 echo
 echo
-# Get the database name, user and pwd from settings file
-line=`cat web/settings.php | grep mysql`
-IFS='\/\/' read -ra first_array <<< "$line"
-dbname=${first_array[3]::-2}
-IFS='\@' read -ra second_array <<< "${first_array[2]}"
-IFS=':' read -ra namepw_array <<< "${second_array[0]}"
-uname=${namepw_array[0]}
-upwd=${namepw_array[1]}
-#echo "dbname = $dbname uname = $uname upwd = $upwd"
-# now use them
 options=("Local Database" "Dev Database" "Prod Database" "No Database")
-echo "Select which Database to import"
+echo "Select which Database to import DATABASE"
 select opt in "${options[@]}"
 do
     case $opt in
         "Local Database")
-            echo "Importing the Local Db"
+            echo "Importing the Local Db to DATABASE"
             gunzip config/local_db/database.sql.gz
-            mysql -u $uname -p$upwd $dbname < config/local_db/database.sql
+            mysql --defaults-extra-file=.dbCreds DATABASE < config/local_db/database.sql
             gzip config/local_db/database.sql
             break
             ;;
 
         "Dev Database")
-	    echo "Importing the Dev Db"
+	    echo "Importing the Dev Db to DATABASE"
 	    gunzip config/dev_db/database.sql.gz
-	    mysql -u $uname -p$upwd $dbname < config/dev_db/database.sql
+	    mysql --defaults-extra-file=.dbCreds DATABASE < config/dev_db/database.sql
 	    gzip config/dev_db/database.sql
             break
             ;;
         "Prod Database")
-	    echo "Importing the Prod Db"
+	    echo "Importing the Prod Db to DATABASE"
 	    gunzip config/prod_db/database.sql.gz
-	    mysql -u $uname -p$upwd $dbname < config/prod_db/database.sql
+	    mysql --defaults-extra-file=.dbCreds DATABASE < config/prod_db/database.sql
 	    gzip config/prod_db/database.sql
             break
             ;;
@@ -61,8 +52,8 @@ drush bcim
 echo
 drush updb
 drush cc all
+# stash the unzipped and rezipped database
 git stash
 echo "Finished - Ready to test the updates"
 echo
-
 

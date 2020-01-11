@@ -33,7 +33,7 @@ askfg(){
     done
 }       # End of ask()
 #
-############ Import Config
+############ Import Config copied from config.cfg with details for this site added
 configFile=config.cfg.fg
 if [ -e "$configFile" ]; then
   source $configFile
@@ -41,12 +41,12 @@ else
   echo "I cannot find the Config File $configFile so using the default config.cfg"
   configFile=config.cfg
   source = $configFile
-fi
-if [ -e "$configFile" ]; then
-    source $configFile
-  else
-    echo "I cannot find the Config File $configFile so I cannot continue"
-    exit 1
+  if [ -e "$configFile" ]; then
+      source $configFile
+    else
+      echo "I cannot find the Config File $configFile so I cannot continue"
+      exit 1
+  fi
 fi
 #-----------------------------------------------------------------------------
 cd $apacheRoot
@@ -106,16 +106,18 @@ cp "$workingFolder/base_files/FixPermissions" ./
 cp "$workingFolder/base_files/backupEssentials" ./
 echo "Copying a .gitignore file for you"
 cp "$workingFolder/base_files/gitignore" ./.gitignore
+echo "Copying a .dbCreds file for your MySQL commands "
+cp "$workingFolder/base_files/dbCreds" ./.dbCreds
 cp "$workingFolder/base_files/htaccess_docroot" ./.htaccess
 echo "Copying import and export Sync scripts for you"
 cp "$workingFolder/base_files/importConfigSync" ./
 cp "$workingFolder/base_files/exportConfigSync" ./
 echo "Creating a .htaccess access file in DocumentRoot to redirect Document Root to web"
 sed -i "s,SITEFOLDER,$siteFolder," .htaccess
+sed -i "s,DATABASE_USER_NAME,$dbUser," .dbCreds
+sed -i "s,DATABASE_PASSWORD,$dbPwd," .dbCreds
 sed -i "s,SITEFOLDER,$siteFolder," exportConfigSync
 sed -i "s,SITEFOLDER,$siteFolder," importConfigSync
-sed -i "s,DATABASE_USER_NAME,$dbUser," importConfigSync
-sed -i "s,DATABASE_PASSWORD,$dbPwd," importConfigSync
 sed -i "s,DATABASE,$db," importConfigSync
 echo "Updating FixPermissions User and Group"
 sed -i "s,USER,$apacheUser," FixPermissions
@@ -137,23 +139,20 @@ echo "There is a bug in the Drush install which does not create the password cor
 drush upwd $acName --password=$acPwd
 cd ..
 echo
+echo "-------------------[ Finished the Install ]-------------------"
 echo
-echo "You need to Check, Add and Commit to repository"
+echo " Now run down this check list"
+echo "	1. DO NOT FORGET TO PUT THE Site URL INTO THE LAST LINE OF web/settings.php"
+echo "	2. Run FixPermissions as ROOT from the $apacheRoot/$siteFolder folder"
+echo "	3. The $siteName Site should now be up and running so go the URL of the site and log in as $acName"
+echo "		Test it out, check the Reports->Status Report and Reports->Log Messages"
+echo "		then Fix any Problems iif necessary, clear the caches as well"
+echo "	4. Remember to export your site settings using the exportConfigSync script"
+echo "	5. git add -A"
+echo "	6. git commit -a,m 'Initial Comit'"
+echo " Now you should create a remote repo, and push"
 echo
-echo "now run FixPermissions as ROOT from the $apacheRoot/$siteFolder folder"
-echo "DO NOT FORGET TO PUT THE Site URL INTO THE LAST LINE OF web/settings.php"
+echo " The scripts 'backupEssentials', 'exportConfigSync' and 'importConfigSync' are there for you to use"
+echo " Enjoy!"
 echo
-echo "The $siteName Site should now be up and running so go the URL of the site and log in as $acName"
-echo "Test it out, check the Reports->Status Report and Reports->Log Messages then tidy it up"
-echo 
-echo "The scripts 'exportConfigSync' and 'importConfigSync' assume you have already"
-echo "installed the drupal/config_ignore module and added 'system.site' to the ignore list"
-echo
-echo " ------------------------------ IMPORTANT -------------------------------------"
-echo "Then AFTER fixing folders and entries in the importConfigSync and exportConfigSync files"
-echo "remember to export your site settings using the exportConfigSync script"
-echo
-echo "Then use git to add and commit and push"
-echo 
-echo "There is more info regarding a git workflow at https://themetman.net/drupal"
-echo
+echo "---------------------[ All Done ]-------------------"
