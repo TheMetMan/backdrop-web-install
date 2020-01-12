@@ -150,7 +150,7 @@ echo "		Test it out, check the Reports->Status Report and Reports->Log Messages"
 echo "		then Fix any Problems iif necessary, clear the caches as well"
 echo "	4. Remember to export your site settings using the exportConfigSync script"
 echo "	5. git add -A"
-echo "	6. git commit -a,m 'Initial Comit'"
+echo "	6. git commit -am 'Initial Commit'"
 echo " Now you should create a remote repo, and push"
 echo
 echo " The scripts 'backupEssentials', 'exportConfigSync' and 'importConfigSync' are there for you to use"

@@ -5,7 +5,7 @@
 # MUST be run a s root if changing ownership of files
 #
 echo "Setting Permissions and Ownership on this Site"
-chown -Rv francis:apache .
+chown -Rv USER:GROUP .
 echo "Setting all directories to 755"
 find . -type d -exec chmod u=rwx,g=rx,o=rx '{}' \+
 echo "Setting all files to 644"
