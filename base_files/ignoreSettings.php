@@ -7,8 +7,7 @@
  *
  * I real life this script will be run byt a script in the DOCUMENT_ROOT
  */
-#$rootDir = realpath($_SERVER["DOCUMENT_ROOT"]);
-$rootDir = "/home/francis/FG-Docs/PhpstormProjects/ignoreSettings";
+$rootDir = realpath($_SERVER["DOCUMENT_ROOT"]);
 $sourceFile = $rootDir . "/config/active/system.core.json";
 $targetFile = $rootDir . "/config/staging/system.core.json";
 $tempFile = $rootDir . "/system.core.json";
@@ -39,7 +38,7 @@ $parts = explode("\n", $f);
 $x = 0;
 foreach ($parts as &$line) {
     foreach ($patternArray as &$pattern)
-        if (preg_match($pattern, $line)) {
+        if (preg_match('/\"' . $pattern . '\":/', $line)) {
             $line = $sourceItems[$x];
             $x++;
         }

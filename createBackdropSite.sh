@@ -104,8 +104,9 @@ echo
 echo "copy useful files across and clean up a little"
 cp "$workingFolder/base_files/FixPermissions" ./
 cp "$workingFolder/base_files/backupEssentials" ./
-echo "Copying a .gitignore file for you"
+echo "Copying a .gitignore file for you and removing the web/.gigignore file. It causes probs"
 cp "$workingFolder/base_files/gitignore" ./.gitignore
+rm "$apacheRoot/$siteFolder/web/.gitignore"
 echo "Copying a .dbCreds file for your MySQL commands "
 cp "$workingFolder/base_files/dbCreds" ./.dbCreds
 cp "$workingFolder/base_files/htaccess_docroot" ./.htaccess

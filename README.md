@@ -51,30 +51,57 @@ Here is my file layout
     └── themes
 
 Create a remote Git repository.
+
 Here is an example of the workflow assuming you have all Local, Dev and Prod in sync and identical.
-ExportConfigSync and Git Push Production Site to Repo. Stop adding Content to the Prod site
-On Local Site Git Pull from Repo
-./importConfigSync and choose the Production Database to import so Production and Local are Identical
-Change something on the Local site eg. add a module or theme, or add some content.
+ExportConfigSync and Git Push Production Site to Repo. Stop adding Content to the Prod site (put in maintenance Mode)
+On Local Site Git Pull from Repo and importConfigSync (choosing the Prod Site Database, so the Prod and Local Sites are Identical.
+Change something on the Local site eg. add a module or theme, or add some content, or Upgrade Backdrop.
+Then exportConfigSync Locally, git push and on the Dev Site Git Pull then importConfigSync choosing the Local Database) and then the Local and Dev sites are in Sync.
+Check the Dev Site is working OK.
+Do the same for the Prod Site. so they will all be equal. Then put Prod Site out of Maintenance Mode.
 
-Export your config and content using exportConfigSync script. 
-`./exportConfigSync`
-This will have the current config in config/staging folder, and the database in the correct folder ie. Local (we hope, See above).
-Then 
-`git add -A`
-`git commit -am "add your commit text here"`
-`git push origin master`
-Now go to the Dev site.
-`git checkout -b update`
-`git pull origin master`
-`./importConfigSync` and select the Local Database to import, then select 'y' to import config.
+Here is an example of the actual commands you sould use in the above example
 
-Then test the site. It should match the local site. If all is OK
+***On the Prod Site***
+./exportConfigSync
+git status
+git add -A
+git commit -am "Syncing the Prod Site to Local"
+git push origin master
 
-`git checkout master`
-`git merge update`
-`git branch -d update`
-`git push origin master`
+***On the Local Site***
+git checkout -b update
+git pull origin master
+./importConfigSync (choose the Prod Database to import and say 'y' to importing the config files)
 
-You can then repeat this for the Production Site.
+Now make the changes eg add a module or something, check all is OK then....
+IF it is OK
+git checkout master
+git merge update
+git branch -d update
+./exportConfigSync
+git status
+git add -A
+git commit -am "Added the PERFECT Module"
+git push origin master
+
+***On the Dev Site***
+git checkout -b update
+git pull origin master
+./importConfigSync (choose the Local Database to import and say 'y' to importing the config files)
+Check all is well on the Dev Site If so.....
+git checkout master
+git merge update
+git branch -d update
+
+***On the Prod Site***
+git checkout -b update
+git pull origin master
+./importConfigSync (choose the Dev or Local Database to import and say 'y' to importing the config files)
+Check all is well on the Prod Site If so.....
+git checkout master
+git merge update
+git branch -d update
+
+All your sites are updated and in Sync.
 ------------------------------------------------------------------------------------

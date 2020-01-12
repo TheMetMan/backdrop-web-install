@@ -21,6 +21,8 @@ else
 fi
 drush sql-dump --gzip --result-file="${DIRECTORY}/database.sql"
 cp se* "${DIRECTORY}"
-# Consider other files to backup eg css for the theme
+rsync -avrz ../config/active "${DIRECTORY}/"
+# Consider other files to backup eg css for the local theme css files
+#
 echo "Finished"
 ls -lh "${DIRECTORY}"
