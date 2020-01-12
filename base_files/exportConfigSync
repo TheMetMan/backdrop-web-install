@@ -9,6 +9,7 @@ echo "Exporting the Settings to config/staging"
 echo
 cd web
 # MAKE SURE YOU CHOSE THE CORRECT FOLDER HERE FOR YOUR SITE
+# Either ../config/local_db, ../config/dev_deb or ../config/prod_db"
 drush sql-dump --gzip --result-file="../config/local_db/database.sql"
 drush bcex -y
 echo
