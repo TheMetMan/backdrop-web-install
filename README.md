@@ -64,11 +64,11 @@ Here is an example of the actual commands you sould use in the above example
 
 ***On the Prod Site***
 ```bash
-./exportConfigSync\
-git status\
-git add -A\
-git commit -am "Syncing the Prod Site to Local"\
-git push origin master\
+./exportConfigSync
+git status
+git add -A
+git commit -am "Syncing the Prod Site to Local"
+git push origin master
 ```
 ***On the Local Site***
 ```bash
