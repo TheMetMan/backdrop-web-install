@@ -139,6 +139,8 @@ drush cc all
 echo "There is a bug in the Drush install which does not create the password correctly, so fix here"
 drush upwd $acName --password=$acPwd
 cd ..
+# remove the .gitignore file in the web folder. it messes up my gitignore file!
+rm web/.gitignore
 echo
 echo "-------------------[ Finished the Install ]-------------------"
 echo
