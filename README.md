@@ -1,5 +1,6 @@
 # Install Backdrop using drush 8 
 This is a collection of Bash and php Scripts to install a new Backdrop site using Drush for File Based Workflow in a little under Three Minutes.
+Also there is a script to upgrade Backdrop CMS Core when required. This is called runBackdropUpgrade. Instructions are at the end of this file.
 
 # Preamble
 I am not the only one to have become somewhat disenchanted with Drupal 8. It has become increasingly difficult to keep up to date without problems for Non-Profit Organisations. As a single developer I have decided to move to Backdrop and develop my own scrips to manage updates.
@@ -105,3 +106,24 @@ git branch -d update
 
 All your sites are updated and in Sync.
 ------------------------------------------------------------------------------------
+
+**Cloning a Site is Easy**
+Using this system it is easy to Clone a Site.
+Create an empty Database, Site Folder and Vhost on the Target Server.
+On the Source, export the Config settings, then rsync the whole site to the Target Server.
+On the Target server you will need to change the following:
+In the web/settings.php file, change database settings near the top of the file and the Trusted Hosts and Base URL at the bottom to agree with credentials.
+Edit the .dbCreds file to reflect the new database settings.
+Edit the exportConfigSync file to do the backupEssentials to the correct folder (Matches the Site Folder).
+Do the same for the importConfigSync file, also edit the mysql command to import to the Target Database.
+remove the old git remote origin repo settings and add again with the correct remote repo.
+
+Now still on the Target Server, run the importConfigSync and choose to import from the Source be it Local, Dev or Prod, and you will have a working site.
+
+------------------------------------------------------------------------------------
+**Upgrading Backdrop Core**
+I have created a bash script to upgrade a site when a new version of Backdrop becomes available.
+All you need to do is to run the script runBackdropUpgrade and you will end up with the new version in place, but the old version backed up.
+There are instructions on what to do should something go wrong at the end of that file.
+
+

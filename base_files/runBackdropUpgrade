@@ -1,0 +1,75 @@
+#!/bin/bash
+#
+# script to upgrade Backdrop Core
+#
+askfg(){
+  local REPLY
+  while true;
+    do
+        read -p "$1 [Y/n]" REPLY </dev/tty
+        # Default is Y
+        if [ -z "$REPLY" ]; then
+          REPLY=Y
+        fi
+        # Check if the reply is valid
+        case "$REPLY" in
+          Y*|y*) return 0 ;;
+          N*|n*) return 1 ;;
+        esac
+    done
+}       # End of ask()
+# remove any leading and trailing spaces
+trimSpaces(){
+  shopt -s extglob
+  local output=$1
+  ### Trim leading whitespaces ###
+  output="${output##*( )}"
+  ### trim trailing whitespaces  ##
+  output="${output%%*( )}"
+  shopt -u extglob
+  echo "${output}"
+} # End of trimSpaces
+#----------------------------------------------------
+# Backup the site Database and Settings
+./exportConfigSync
+cd web
+# Get the Backdrop Version
+IFS=':' read -ra version_array <<< `drush status | grep 'Backdrop version'`
+version="${version_array[1]}"
+echo $version
+version=$(trimSpaces "${version}")
+echo $version
+coreBackupFolder="core-${version}"
+cd ..
+echo "Moving Core Folder to ${coreBackupFolder}"
+if [ -e "$coreBackupFolder" ]; then
+    if askfg "Do you really want to overwrite ${coreBackupFolder}" ; then
+    rm -fvr "${coreBackupFolder}"
+  else
+    exit 1
+  fi
+fi
+mv 'web/core' "${coreBackupFolder}"
+echo "Getting latest Release Version of Backdrop"
+drush dlb backdrop
+mv 'backdrop/core' 'web/core'
+./FixPermissions
+cd web
+drush updb
+drush cc all
+echo
+cd ..
+ls
+echo
+echo "Now check the site is running OK, Check Status Report and Logs"
+echo "If all is OK, then delete the backdrop Folder and the $coreBackupFolder Folder"
+echo "Before exportConfigSync and git commit and push"
+echo
+echo "If it all goes 'Pear Shaped' then you can easily restore the previous version as follows"
+echo "	1. Remove the web/core folder and move the core-VERSION to web/core"
+echo "	2. Clear the contents of the config/staged folder"
+echo "	3. Copy the contents of the ~/Backup/WEB-FOLDER/DATE-STAMP/active folder to the config/staged folder"
+echo "	4. Run the importConfigSync script, chosing the database from THIS Site to import"
+echo
+echo "And that should be that, back where you started"
+echo

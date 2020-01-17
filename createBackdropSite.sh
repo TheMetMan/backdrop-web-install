@@ -113,6 +113,7 @@ cp "$workingFolder/base_files/htaccess_docroot" ./.htaccess
 echo "Copying import and export Sync scripts for you"
 cp "$workingFolder/base_files/importConfigSync" ./
 cp "$workingFolder/base_files/exportConfigSync" ./
+cp "$workingFolder/base_files/runBackdropUpgrades" ./
 echo "Creating a .htaccess access file in DocumentRoot to redirect Document Root to web"
 sed -i "s,SITEFOLDER,$siteFolder," .htaccess
 sed -i "s,DATABASE_USER_NAME,$dbUser," .dbCreds
