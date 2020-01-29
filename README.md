@@ -28,7 +28,7 @@ and execute like so:
 
 Wait a little ......
 
-If you do this correctly for the Local, Dev and Prod sites you will end up with the databases in the correct dev_db, prod_db and local_db folders. If not you will be in a mess, so take time to get this correct!
+If you do this correctly for the Local site you will end up with the databases in the config/versioned folder.\
 
 # To Sync with Dev and Production
 Clone the local site to Dev and Production once you have it working to your satisfaction.\
@@ -36,10 +36,8 @@ Here is my file layout\
 .
 ├── config\
 │   ├── active\
-│   ├── dev_db\
-│   ├── local_db\
-│   ├── prod_db\
-│   └── staging\
+│   ├── staging\
+│   └── versioned\
 ├── logs\
 ├── private\
 └── web\
@@ -54,9 +52,11 @@ Create a remote Git repository.
 
 Here is an example of the workflow assuming you have all Local, Dev and Prod in sync and identical.\
 ExportConfigSync and Git Push Production Site to Repo. Stop adding Content to the Prod site (put in maintenance Mode)\
-On Local Site Git Pull from Repo and importConfigSync (choosing the Prod Site Database, so the Prod and Local Sites are Identical.\
+On Local Site Git Pull from Repo and importConfigSync. 
+This will replace the database with the one in copnfig/versioned and sync the config/versioned/\*.json files to config/staging, overwriting anything you have put in the config/ignoreSettings.php file 
+then import into the site database\
 Change something on the Local site eg. add a module or theme, or add some content, or Upgrade Backdrop.\
-Then exportConfigSync Locally, git push and on the Dev Site Git Pull then importConfigSync choosing the Local Database) and then the Local and Dev sites are in Sync.\
+Then exportConfigSync Locally, git push and on the Dev Site Git Pull then importConfigSync and then the Local and Dev sites are in Sync.\
 Check the Dev Site is working OK.\
 Do the same for the Prod Site. so they will all be equal. Then put Prod Site out of Maintenance Mode.\
 
@@ -117,12 +117,11 @@ Create an empty Database, Site Folder and Vhost on the Target Server.
 On the Source, export the Config settings, then rsync the whole site to the Target Server.
 On the Target server you will need to change the following:
 In the web/settings.php file, change database settings near the top of the file and the Trusted Hosts and Base URL at the bottom to agree with credentials.
-Edit the .dbCreds file to reflect the new database settings.
 Edit the exportConfigSync file to do the backupEssentials to the correct folder (Matches the Site Folder).
-Do the same for the importConfigSync file, also edit the mysql command to import to the Target Database.
-remove the old git remote origin repo settings and add again with the correct remote repo.
+Do the same for the importConfigSync file.
+Remove the old git remote origin repo settings and add again with the correct remote repo.
 
-Now still on the Target Server, run the importConfigSync and choose to import from the Source be it Local, Dev or Prod, and you will have a working site.
+Now still on the Target Server, run the importConfigSync and you will have a working site matching the source site.
 
 ------------------------------------------------------------------------------------
 

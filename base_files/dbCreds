@@ -1,9 +1,0 @@
-# Database Credentials for this database using a dot file to hide it
-# when using MySQL Scripts mysql --defaults-extra-file=.dbCreds
-#
-# also make sure it is set to 400 in FixPremissions
-[client]
-user=DATABASE_USER_NAME
-password=DATABASE_PASSWORD
-
-

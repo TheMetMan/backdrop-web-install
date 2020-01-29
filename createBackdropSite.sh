@@ -108,7 +108,6 @@ echo "Copying a .gitignore file for you and removing the web/.gigignore file. It
 cp "$workingFolder/base_files/gitignore" ./.gitignore
 rm "$apacheRoot/$siteFolder/web/.gitignore"
 echo "Copying a .dbCreds file for your MySQL commands "
-cp "$workingFolder/base_files/dbCreds" ./.dbCreds
 cp "$workingFolder/base_files/htaccess_docroot" ./.htaccess
 echo "Copying import and export Sync scripts for you"
 cp "$workingFolder/base_files/importConfigSync" ./
@@ -116,11 +115,8 @@ cp "$workingFolder/base_files/exportConfigSync" ./
 cp "$workingFolder/base_files/runBackdropUpgrades" ./
 echo "Creating a .htaccess access file in DocumentRoot to redirect Document Root to web"
 sed -i "s,SITEFOLDER,$siteFolder," .htaccess
-sed -i "s,DATABASE_USER_NAME,$dbUser," .dbCreds
-sed -i "s,DATABASE_PASSWORD,$dbPwd," .dbCreds
 sed -i "s,SITEFOLDER,$siteFolder," exportConfigSync
 sed -i "s,SITEFOLDER,$siteFolder," importConfigSync
-sed -i "s,DATABASE,$db," importConfigSync
 echo "Updating FixPermissions User and Group"
 sed -i "s,USER,$apacheUser," FixPermissions
 sed -i "s,GROUP,$apacheGroup," FixPermissions

@@ -5,55 +5,35 @@
 # Import Backdrop Settings using Drush 8
 #
 # Backup the site Database and Settings
+echo
+echo "Backup the site Database and Settings"
 ./backupEssestials SITEFOLDER
+echo
 echo "Importing the Settings from config/staging"
 echo
+rm config/staging/*
+cp config/versioned/*.json config/staging/
 echo "Removing Unnecessary Settings from system.core.json"
 php config/ignoreSettings.php
 echo
 echo
-options=("Local Database" "Dev Database" "Prod Database" "No Database")
-echo "Select which Database to import DATABASE"
-select opt in "${options[@]}"
-do
-    case $opt in
-        "Local Database")
-            echo "Importing the Local Db to DATABASE"
-            gunzip config/local_db/database.sql.gz
-            mysql --defaults-extra-file=.dbCreds DATABASE < config/local_db/database.sql
-            gzip config/local_db/database.sql
-            break
-            ;;
-
-        "Dev Database")
-	    echo "Importing the Dev Db to DATABASE"
-	    gunzip config/dev_db/database.sql.gz
-	    mysql --defaults-extra-file=.dbCreds DATABASE < config/dev_db/database.sql
-	    gzip config/dev_db/database.sql
-            break
-            ;;
-        "Prod Database")
-	    echo "Importing the Prod Db to DATABASE"
-	    gunzip config/prod_db/database.sql.gz
-	    mysql --defaults-extra-file=.dbCreds DATABASE < config/prod_db/database.sql
-	    gzip config/prod_db/database.sql
-            break
-            ;;
-        "No Database")
-            echo "No Db"
-            break
-            ;;
-    esac
-done
 cd web
+echo "Importing the Database"
+echo
+drush sql-drop -y
+drush sql-cli < ../config/versioned/database.sql
+echo
+echo "Updating Database and Clearing the Cache"
 drush updb
 drush cc all
+echo
+echo "Importing the staged config"
+echo
 drush bcim
 echo
+echo "Updating Database and Clearing the Cache"
 drush updb
 drush cc all
-# stash the unzipped and rezipped database
-git stash
 echo "Finished - Ready to test the updates"
 echo
 

@@ -7,11 +7,13 @@
 ./backupEssentials SITEFOLDER &&
 echo "Exporting the Settings to config/staging"
 echo
+# start with a clean slate
+echo "Clearing config/versioned folder and copying config/active"
+rm config/versioned/*
+cp config/active/* config/versioned/
 cd web
-# MAKE SURE YOU CHOSE THE CORRECT FOLDER HERE FOR YOUR SITE
-# Either ../config/local_db, ../config/dev_deb or ../config/prod_db"
-drush sql-dump --gzip --result-file="../config/local_db/database.sql"
-drush bcex -y
+echo "Dumping Database to config/versioned foilder"
+drush sql-dump --result-file="../config/versioned/database.sql"
 echo
 echo "Some Settings will transfer this site data eg Title, Branding emails etc"
 echo "which we do NOT Want, but the importConfigSync script takes care of this"

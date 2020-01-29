@@ -11,10 +11,10 @@
 #
 # Needed by Drush import export scripts and are specific to each site
 config/active
+config/staging
 exportConfigSync
 importConfigSync
 FixPermissions
-.dbCreds
 
 #ignore Logs
 logs/*
@@ -25,6 +25,7 @@ web/files/color
 web/files/js
 web/files/css
 web/files/styles
+web/files/met
 web/robots.txt
 web/index.php
 

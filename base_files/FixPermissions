@@ -28,5 +28,3 @@ chmod 750 FixPermissions
 chmod 750 backupEssentials
 chmod 700 *ConfigSync
 chmod 750 runBackdropUpgrade
-# Set Database Credentials to 400
-chmod 400 .dbCreds
