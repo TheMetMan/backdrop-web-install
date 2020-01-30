@@ -5,7 +5,7 @@
 # then Export Drupal Settings using Drush 8
 #
 ./backupEssentials SITEFOLDER &&
-echo "Exporting the Settings to config/staging"
+echo "Exporting the Settings to config/versioned"
 echo
 # start with a clean slate
 echo "Clearing config/versioned folder and copying config/active"
