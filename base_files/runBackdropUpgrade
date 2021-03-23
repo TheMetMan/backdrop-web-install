@@ -2,6 +2,9 @@
 #
 # script to upgrade Backdrop Core
 #
+GREEN='\033[0;32m'
+iRED='\033[0;31m'
+NC='\033[0m' # No Color
 askfg(){
   local REPLY
   while true;
@@ -36,40 +39,31 @@ cd web
 # Get the Backdrop Version
 IFS=':' read -ra version_array <<< `drush status | grep 'Backdrop version'`
 version="${version_array[1]}"
-echo $version
 version=$(trimSpaces "${version}")
 echo $version
-coreBackupFolder="core-${version}"
-cd ..
-echo "Moving Core Folder to ${coreBackupFolder}"
-if [ -e "$coreBackupFolder" ]; then
-    if askfg "Do you really want to overwrite ${coreBackupFolder}" ; then
-    rm -fvr "${coreBackupFolder}"
+if askfg "Do you really want to Upgrade from Version ${version}. I have already taken a backup" ; then
+    echo "OK Here we go"
   else
     exit 1
   fi
-fi
-mv 'web/core' "${coreBackupFolder}"
 echo "Getting latest Release Version of Backdrop"
-drush dlb backdrop
-mv 'backdrop/core' 'web/core'
-./FixPermissions
-cd web
+drush up core --no-backup
 drush updb
 drush cc all
 echo
 cd ..
+./FixPermissions
 ls
 echo
 echo "Now check the site is running OK, Check Status Report and Logs"
-echo "If all is OK, then delete the backdrop Folder and the $coreBackupFolder Folder"
-echo "Before exportConfigSync and git commit and push"
+printf "${GREEN}If all is OK, then exportConfigSync and git commit and push\n"
 echo
-echo "If it all goes 'Pear Shaped' then you can easily restore the previous version as follows"
-echo "	1. Remove the web/core folder and move the core-VERSION to web/core"
+printf "${RED}If it all goes 'Pear Shaped' then you can easily restore the previous version as follows\n"
+printf "${NC}	1. Remove the web/core folder and gunzip the core-VERSION to web/core from the current backup"
+echo "         Remember to be in the web folder before running gunzip"
 echo "	2. Clear the contents of the config/staged folder"
 echo "	3. Copy the contents of the ~/Backup/WEB-FOLDER/DATE-STAMP/active folder to the config/staged folder"
-echo "	4. Run the importConfigSync script, chosing the database from THIS Site to import"
+echo "	4. Run the importConfigSync script"
 echo
 echo "And that should be that, back where you started"
 echo

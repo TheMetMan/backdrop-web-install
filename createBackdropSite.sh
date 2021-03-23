@@ -150,7 +150,8 @@ echo "	5. git add -A"
 echo "	6. git commit -am 'Initial Commit'"
 echo " Now you should create a remote repo, and push"
 echo
-echo " The scripts 'backupEssentials', 'exportConfigSync', 'importConfigSync' and 'runBackdropUpgrade' are there for you to use"
+echo " The scripts 'backupEssentials', 'exportConfigSync', 'importConfigSync'"
+echo " and 'runBackdropUpgrade' are there for you to use"
 echo " Enjoy!"
 echo
 echo "---------------------[ All Done ]-------------------"
