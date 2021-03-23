@@ -87,9 +87,7 @@ mkdir logs
 configFolder=config
 mkdir -p $configFolder/staging
 mkdir $configFolder/active
-mkdir $configFolder/local_db
-mkdir $configFolder/dev_db
-mkdir $configFolder/prod_db
+mkdir $configFolder/versioned
 cp "$workingFolder/base_files/htaccess" $configFolder/.htaccess
 echo "Adjust some settings on the settings.php file"
 sed -i 's/^$config/#&/' web/settings.php
@@ -112,7 +110,7 @@ cp "$workingFolder/base_files/htaccess_docroot" ./.htaccess
 echo "Copying import and export Sync scripts for you"
 cp "$workingFolder/base_files/importConfigSync" ./
 cp "$workingFolder/base_files/exportConfigSync" ./
-cp "$workingFolder/base_files/runBackdropUpgrades" ./
+cp "$workingFolder/base_files/runBackdropUpgrade" ./
 echo "Creating a .htaccess access file in DocumentRoot to redirect Document Root to web"
 sed -i "s,SITEFOLDER,$siteFolder," .htaccess
 sed -i "s,SITEFOLDER,$siteFolder," exportConfigSync
@@ -147,14 +145,12 @@ echo "	2. Run FixPermissions as ROOT from the $apacheRoot/$siteFolder folder"
 echo "	3. The $siteName Site should now be up and running so go the URL of the site and log in as $acName"
 echo "		Test it out, check the Reports->Status Report and Reports->Log Messages"
 echo "		then Fix any Problems iif necessary, clear the caches as well"
-echo "	4. Remember to Edit the exportConfigSync File to put the correct folder for exported databases"
-echo "		Either ../config/local_db, ../config/dev_deb or ../config/prod_db"
-echo "	5. Remember to export your site settings using the exportConfigSync script"
-echo "	6. git add -A"
-echo "	7. git commit -am 'Initial Commit'"
+echo "	4. Remember to export your site settings using the exportConfigSync script"
+echo "	5. git add -A"
+echo "	6. git commit -am 'Initial Commit'"
 echo " Now you should create a remote repo, and push"
 echo
-echo " The scripts 'backupEssentials', 'exportConfigSync' and 'importConfigSync' are there for you to use"
+echo " The scripts 'backupEssentials', 'exportConfigSync', 'importConfigSync' and 'runBackdropUpgrade' are there for you to use"
 echo " Enjoy!"
 echo
 echo "---------------------[ All Done ]-------------------"
