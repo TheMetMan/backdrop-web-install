@@ -8,6 +8,7 @@
  * I real life this script will be run byt a script in the DOCUMENT_ROOT
  */
 $rootDir = realpath($_SERVER["DOCUMENT_ROOT"]);
+copy($rootDir . "/config/active/update.settings.json",$rootDir . "/config/staging/update.settings.json");
 $sourceFile = $rootDir . "/config/active/system.core.json";
 $targetFile = $rootDir . "/config/staging/system.core.json";
 $tempFile = $rootDir . "/system.core.json";
