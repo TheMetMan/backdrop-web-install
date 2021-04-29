@@ -19,6 +19,8 @@ done
 find config -type d -exec chmod ug=rwx,o=rx '{}' \+
 find config -type f -exec chmod ug=rw,o=r '{}' \+
 chmod 770 private
+echo 'Setting modules folder 775'
+chmod 775 web/modules
 echo "Setting settings.php file to 440"
 chmod 440 web/settings.php
 echo "Setting all .htaccess files 444"
@@ -26,5 +28,5 @@ find . -type f -name .htaccess -exec chmod u=r,g=r,o=r '{}' \+
 echo "Setting FixPermissions to 750"
 chmod 750 FixPermissions
 chmod 750 backupEssentials
-chmod 700 *ConfigSync
 chmod 750 runBackdropUpgrade
+chmod 700 *ConfigSync
