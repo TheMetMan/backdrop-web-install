@@ -18,13 +18,13 @@ The install puts a .htaccess file in the DocRoot to make the web/ folder the Doc
 
 # Usage
 Place the script and the base_files folder in a location of your choice eg ~/bin/backdrop_install\
-Copy the config.cfg file as config.cfg.fg and put the correct variables for your location and site in place, then make sure the createDrupalSite.sh script is executable, and run from the above folder.
+Copy the config.cfg file as config.cfg.fg and put the correct variables for your location and site in place, then make sure the createBackdropSite.sh script is executable, and run from the above folder.
 
-`chmod +x createDrupalSite.sh`
+`chmod +x createBackdropSite.sh`
 
 and execute like so:
 
-`./createDrupalSite.sh`
+`./createBackdropSite.sh`
 
 Wait a little ......
 
