@@ -104,14 +104,14 @@ cp "$workingFolder/base_files/FixPermissions" ./
 cp "$workingFolder/base_files/backupEssentials" ./
 echo "Copying a .gitignore file for you and removing the web/.gigignore file. It causes probs"
 cp "$workingFolder/base_files/gitignore" ./.gitignore
+echo "remove the .gitignore file in the web folder. it messes up my gitignore file!"
 rm "$apacheRoot/$siteFolder/web/.gitignore"
-echo "Copying a .dbCreds file for your MySQL commands "
-cp "$workingFolder/base_files/htaccess_docroot" ./.htaccess
 echo "Copying import and export Sync scripts for you"
 cp "$workingFolder/base_files/importConfigSync" ./
 cp "$workingFolder/base_files/exportConfigSync" ./
 cp "$workingFolder/base_files/runBackdropUpgrade" ./
 echo "Creating a .htaccess access file in DocumentRoot to redirect Document Root to web"
+cp "$workingFolder/base_files/htaccess_docroot" ./.htaccess
 sed -i "s,SITEFOLDER,$siteFolder," .htaccess
 sed -i "s,SITEFOLDER,$siteFolder," exportConfigSync
 sed -i "s,SITEFOLDER,$siteFolder," importConfigSync
@@ -134,8 +134,6 @@ drush cc all
 echo "There is a bug in the Drush install which does not create the password correctly, so fix here"
 drush upwd $acName --password=$acPwd
 cd ..
-# remove the .gitignore file in the web folder. it messes up my gitignore file!
-rm web/.gitignore
 echo
 echo "-------------------[ Finished the Install ]-------------------"
 echo
@@ -155,3 +153,4 @@ echo " and 'runBackdropUpgrade' are there for you to use"
 echo " Enjoy!"
 echo
 echo "---------------------[ All Done ]-------------------"
+
