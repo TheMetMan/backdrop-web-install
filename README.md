@@ -130,3 +130,23 @@ I have created a bash script to upgrade a site when a new version of Backdrop be
 All you need to do is to run the script runBackdropUpgrade and you will end up with the new version in place, but the old version backed up.\
 There are instructions on what to do should something go wrong at the end of that file.
 
+------------------------------------------------------------------------------------
+
+**Create a Snapshot of the Site**
+Use git to create a new branch and make sure everything is committed
+```bash
+git checkout -b snapshot
+git status
+./exportConfigSync
+git add -A
+git commit -am "Creating a Snapshot"
+```
+Check all is well on the Site If so.....
+you have a snapshot you can always go back to as follows
+```bash
+git checkout snapshot
+git status
+./importConfigSync
+```
+You will now have a site as per the snapshot
+
