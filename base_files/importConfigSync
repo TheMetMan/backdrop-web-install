@@ -7,7 +7,7 @@
 # Backup the site Database and Settings
 echo
 echo "Backup the site Database and Settings"
-./backupEssestials SITEFOLDER
+./backupEssentials SITEFOLDER
 echo
 echo "Importing the Settings from config/staging"
 echo
