@@ -48,9 +48,14 @@ if askfg "Do you really want to Upgrade from Version ${version}. I have already 
   fi
 echo "Getting latest Release Version of Backdrop"
 cd "modules"
+# ------------------------------------------------------------
+# Comment out the next 3 lines if you do not want core upgraded
+# for instance if there is a pre-release of core
+# and you only want to upgrade the modules
 echo "Upgrade Core"
 yes | drush up core
 echo ""
+# ------------------------------------------------------------
 echo "Upgrade Modules"
 yes | drush up *
 echo ""
