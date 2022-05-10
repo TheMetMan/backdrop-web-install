@@ -47,7 +47,13 @@ if askfg "Do you really want to Upgrade from Version ${version}. I have already 
     exit 1
   fi
 echo "Getting latest Release Version of Backdrop"
-drush up core --no-backup
+cd "modules"
+echo "Upgrade Core"
+yes | drush up core
+echo ""
+echo "Upgrade Modules"
+yes | drush up *
+echo ""
 drush updb
 drush cc all
 echo
