@@ -53,11 +53,11 @@ cd "modules"
 # for instance if there is a pre-release of core
 # and you only want to upgrade the modules
 echo "Upgrade Core"
-yes | drush up core
+drush up core
 echo ""
 # ------------------------------------------------------------
 echo "Upgrade Modules"
-yes | drush up *
+drush up *
 echo ""
 drush updb
 drush cc all
