@@ -76,8 +76,13 @@ git init
 echo "Set correct version of Drush"
 git config drush.version 8
 echo 'Downloading Backdrop CMS ....'
-drush dlb backdrop
-mv backdrop web
+# 2022-05-10 drush dlb backdrop command fails
+# drush dlb backdrop
+# so use wget
+wget https://github.com/backdrop/backdrop/archive/refs/heads/1.x.zip
+unzip 1.x.zip
+mv backdrop-1.x web
+rm 1.x.zip
 echo
 echo "create and copy .htaccess file to private folder"
 mkdir private
