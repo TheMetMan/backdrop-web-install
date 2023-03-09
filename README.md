@@ -1,4 +1,4 @@
-# Install Backdrop using drush 8 
+# Install Backdrop using Bee
 This is a collection of Bash and php Scripts to install a new Backdrop site using Bee (originally Drush) for File Based Workflow in a little under Three Minutes.\
 Also there is a script to upgrade Backdrop CMS Core and Modules when required. This is called runBackdropUpgrade. Instructions are at the end of this file.
 
