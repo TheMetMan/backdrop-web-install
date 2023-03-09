@@ -2,27 +2,17 @@
 #
 # script to upgrade Backdrop Core
 #
+# 2023-03-07
+# Check if Updating Core really IS necessary
+#
+# 2023-03-04
+# Changed from Drush to Bee
+#
 GREEN='\033[0;32m'
-iRED='\033[0;31m'
+RED='\033[0;31m'
 NC='\033[0m' # No Color
-askfg(){
-  local REPLY
-  while true;
-    do
-        read -p "$1 [Y/n]" REPLY </dev/tty
-        # Default is Y
-        if [ -z "$REPLY" ]; then
-          REPLY=Y
-        fi
-        # Check if the reply is valid
-        case "$REPLY" in
-          Y*|y*) return 0 ;;
-          N*|n*) return 1 ;;
-        esac
-    done
-}       # End of ask()
 # remove any leading and trailing spaces
-trimSpaces(){
+trimSpaces() {
   shopt -s extglob
   local output=$1
   ### Trim leading whitespaces ###
@@ -32,49 +22,61 @@ trimSpaces(){
   shopt -u extglob
   echo "${output}"
 } # End of trimSpaces
+site_folder() {
+  DIR_PATH=$(/usr/bin/pwd)
+  IFS='/' read -ra DIR <<<"$DIR_PATH"
+  echo "${DIR[-1]}"
+} # End of site_folder
 #----------------------------------------------------
-# Backup the site Database and Settings
-./exportConfigSync
-cd web
+echo
+echo "Backup the site Database and Settings"
+./backupEssentials "$(site_folder)"
+cd web || exit
 # Get the Backdrop Version
-IFS=':' read -ra version_array <<< `drush status | grep 'Backdrop version'`
-version="${version_array[1]}"
+read -ra version_array <<< "$(bee status | grep 'Backdrop CMS')"
+version="${version_array[2]}"
 version=$(trimSpaces "${version}")
-echo $version
-if askfg "Do you really want to Upgrade from Version ${version}. I have already taken a backup" ; then
-    echo "OK Here we go"
-  else
-    exit 1
-  fi
-echo "Getting latest Release Version of Backdrop"
-cd "modules"
-# ------------------------------------------------------------
-# Comment out the next 3 lines if you do not want core upgraded
-# for instance if there is a pre-release of core
-# and you only want to upgrade the modules
-echo "Upgrade Core"
-drush up core
+echo
+echo "Getting latest Release Version of Backdrop ...."
+echo "and Checking Upgrade Core is REALLY necessary."
+echo "Wait for the download........"
+mkdir "/dev/shm/core_tmp"
+bee dl-core "/dev/shm/core_tmp"
+read -ra latest_array <<< "$(grep 'version = 1' < '/dev/shm/core_tmp/core/profiles/standard/standard.info')"
+echo "${latest_array[2]}"
+if [ "${latest_array[2]}" != "${version}" ]; then
+  echo "Upgrading Backdrop CMS to Version ${latest_array[2]}"
+  mv core "core_${version}"
+  mv /dev/shm/core_tmp/core .
+else
+  echo "Core Upgrade Not Necessary"
+fi
+rm -fr /dev/shm/core_tmp
 echo ""
 # ------------------------------------------------------------
 echo "Upgrade Modules"
-drush up *
 echo ""
-drush updb
-drush cc all
+bee update
+bee updb -y
+bee cc all
 echo
-cd ..
+echo "Here is the current status"
+echo ' '
+bee status
+echo ' '
+# cd from web/modules folder
+cd ../
 ./FixPermissions
-ls
 echo
 echo "Now check the site is running OK, Check Status Report and Logs"
-printf "${GREEN}If all is OK, then exportConfigSync and git commit and push\n"
+printf "%s If all is OK, delete the web/core_%s folder, then exportConfigSync and git commit and push" "${GREEN}" "${version}"
 echo
-printf "${RED}If it all goes 'Pear Shaped' then you can easily restore the previous version as follows\n"
-printf "${NC}	1. Remove the web/core folder and gunzip the core-VERSION to web/core from the current backup"
-echo "         Remember to be in the web folder before running gunzip"
+printf "%sIf it all goes 'Pear Shaped' then you can easily restore the previous version as follows" "${RED}"
+printf "%s	1. Remove the web/core folder and move the web/core_%s folder to web/core from the web folder" "${NC}" "${version}"
 echo "	2. Clear the contents of the config/staged folder"
-echo "	3. Copy the contents of the ~/Backup/WEB-FOLDER/DATE-STAMP/active folder to the config/staged folder"
-echo "	4. Run the importConfigSync script"
+echo "	3. Copy the contents of the ~/Backup/WEB-FOLDER/DATE-STAMP/active folder to the config/versioned folder"
+echo "  4. Copy the ~/Backup/WEB-FOLDER/DATE-STAMP/database.sql.gz file to the config/versioned folder"
+echo "	5. Run the importConfigSync script"
 echo
 echo "And that should be that, back where you started"
 echo

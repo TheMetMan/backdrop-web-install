@@ -5,9 +5,19 @@
 # Import Backdrop Settings using Drush 8
 #
 # Backup the site Database and Settings
+#
+# 2023-03-04 changed from Brush to Bee
+#
+# 2022-05-26 changed to Brush from Drush
+#
+site_folder() {
+  DIR_PATH=$(/usr/bin/pwd)
+  IFS='/' read -ra DIR <<< "$DIR_PATH"
+  echo "${DIR[-1]}"
+} # End of site_folder
 echo
 echo "Backup the site Database and Settings"
-./backupEssentials SITEFOLDER
+./backupEssentials "$(site_folder)"
 echo
 echo "Importing the Settings from config/staging"
 echo
@@ -16,24 +26,18 @@ cp config/versioned/*.json config/staging/
 echo "Removing Unnecessary Settings from system.core.json"
 php config/ignoreSettings.php
 echo
-echo
-cd web
+cd web || exit
 echo "Importing the Database"
 echo
-drush sql-drop -y
-drush sql-cli < ../config/versioned/database.sql
-echo
-echo "Updating Database and Clearing the Cache"
-drush updb
-drush cc all
+bee db-import ../config/versioned/database.sql.gz
 echo
 echo "Importing the staged config"
 echo
-drush bcim
+bee bcim -y
 echo
 echo "Updating Database and Clearing the Cache"
-drush updb
-drush cc all
+bee updb -y
+bee cc all
 echo "Finished - Ready to test the updates"
 echo
 

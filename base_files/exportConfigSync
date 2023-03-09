@@ -1,19 +1,30 @@
 #!/bin/bash
 #
 # Script to backup the database and any files you want
-# then copy the database to the config colder
+# then copy the database to the config folder
+#
+# 2023-03-04 changed to bee from drush
+#
+# Originally using Drush
 # then Export Drupal Settings using Drush 8
 #
-./backupEssentials SITEFOLDER &&
+site_folder() {
+  DIR_PATH=$(/usr/bin/pwd)
+  IFS='/' read -ra DIR <<< "$DIR_PATH"
+  echo "${DIR[-1]}"
+} # End of site_folder
+echo
+echo "Backup the site Database and Settings"
+./backupEssentials "$(site_folder)"
 echo "Exporting the Settings to config/versioned"
 echo
 # start with a clean slate
 echo "Clearing config/versioned folder and copying config/active"
 rm config/versioned/*
 cp config/active/* config/versioned/
-cd web
-echo "Dumping Database to config/versioned foilder"
-drush sql-dump --result-file="../config/versioned/database.sql"
+cd web || exit
+echo "Dumping Database to config/versioned folder"
+bee db-export ../config/versioned/database.sql
 echo
 echo "Some Settings will transfer this site data eg Title, Branding emails etc"
 echo "which we do NOT Want, but the importConfigSync script takes care of this"
@@ -22,7 +33,7 @@ echo
 echo "Finished - Ready to git commit -am ..... and push"
 echo
 echo "Then having pushed, on the remote site, "
-echo "then git checkout update and git pull origin master" 
+echo "then git checkout update and git pull origin master"
 echo "and then importConfigSync to finish the job"
 echo
 

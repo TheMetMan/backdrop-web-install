@@ -1,8 +1,12 @@
 #!/bin/bash
 #
 # https://github.com/TheMetMan/backdrop_web_install 
-# 
-# This is the Install script for a Drush Install 
+#
+# 2023-05-07 version 0.2.0
+# Changed form Drush to Bee
+#
+# 2022-05 version 0.1.0
+# This is the Install script for a Drush Install
 #
 # script to create a Backdrop CMS site for File Based Workflow in DocumentRoot web
 # 
@@ -20,7 +24,7 @@ askfg(){
   local REPLY
   while true; 
     do
-        read -p "$1 [Y/n]" REPLY </dev/tty
+        read -rp "$1 [Y/n]" REPLY </dev/tty
         # Default is Y
         if [ -z "$REPLY" ]; then
           REPLY=Y
@@ -35,57 +39,45 @@ askfg(){
 #
 ############ Import Config copied from config.cfg with details for this site added
 configFile=config.cfg.fg
-if [ -e "$configFile" ]; then
-  source $configFile
+if [ -e "${configFile}" ]; then
+  echo "Using ${configFile} config file"
 else
-  echo "I cannot find the Config File $configFile so using the default config.cfg"
-  configFile=config.cfg
-  source = $configFile
-  if [ -e "$configFile" ]; then
-      source $configFile
-    else
-      echo "I cannot find the Config File $configFile so I cannot continue"
-      exit 1
-  fi
+  echo "I cannot find the Config File ${configFile} You MUST create this file"
+  exit 1
 fi
 #-----------------------------------------------------------------------------
-cd $apacheRoot
-echo "----------- This is a Backdrop CMS Install using Drush ----------------"
+# shellcheck disable=SC2154
+cd "$apacheRoot" || exit
+echo "----------- This is a Backdrop CMS Install using Bee ----------------"
+# shellcheck disable=SC2154
 echo "---------- with the DocumentRoot as $apacheRoot/$siteFolder/web --------------"
 echo "                Installing to $apacheRoot/$siteFolder"
 echo
 echo "           Make sure you have an empty database setup ready"
 echo "=============================================================================="
-if [ -d "$siteFolder/web" ]; then
+if [ -d "$siteFolder" ]; then
   echo "**** The Old Site Folder is still present ****"
   echo "     you will need to remove this site."
-  echo "  So as ROOT rm -fvr $apacheRoot/$siteFolder/web"
+  echo "  So as ROOT rm -fvr $apacheRoot/$siteFolder"
   echo "           then re-run this script"
   echo "Quitting Install Backdrop CMS for File Based Workflow"
 #  exit 1
 fi
 if askfg "Do you really want to continue?" ; then
     echo "Installing now"
-    mkdir "$apacheRoot/$siteFolder"
+    mkdir -p "${apacheRoot}/${siteFolder}/web"
   else
     exit 1
   fi
-cd "$apacheRoot/$siteFolder"
+cd "${apacheRoot}/${siteFolder}" || exit
 echo and creating a git repository
 git init
-echo "Set correct version of Drush"
-git config drush.version 8
 echo 'Downloading Backdrop CMS ....'
-# 2022-05-10 drush dlb backdrop command fails
-# drush dlb backdrop
-# so use wget
-wget https://github.com/backdrop/backdrop/archive/refs/heads/1.x.zip
-unzip 1.x.zip
-mv backdrop-1.x web
-rm 1.x.zip
+bee dl-core "${apacheRoot}/${siteFolder}/web"
 echo
 echo "create and copy .htaccess file to private folder"
 mkdir private
+# shellcheck disable=SC2154
 cp "$workingFolder/base_files/htaccess" private/.htaccess
 echo "create the other folders"
 mkdir logs
@@ -95,14 +87,20 @@ mkdir $configFolder/active
 mkdir $configFolder/versioned
 cp "$workingFolder/base_files/htaccess" $configFolder/.htaccess
 echo "Adjust some settings on the settings.php file"
-sed -i 's/^$config/#&/' web/settings.php
-sed -i 's/RewriteRule \^ index.php \[L\]/RewriteRule \^(\.*)\$ index.php?q=\$1 \[L,QSA\]/'  web/.htaccess
+# shellcheck disable=SC2154
+sed -i "s,user:pass,${dbUser}:${dbPwd}," web/settings.php
+# shellcheck disable=SC2154
+sed -i "s,database_name,${db}," web/settings.php
+sed -i "s/RewriteRule \^ index.php \[L\]/RewriteRule \^(\.*)\$ index.php?q=\$1 \[L,QSA\]/"  web/.htaccess
 echo "RewriteBase /web" >> web/.htaccess
+sed -i '/config_directories/d' ./web/settings.php
 cat "$workingFolder/base_files/default.settings.xtra" >> ./web/settings.php
 echo "adding Private Files Path and Trusted Hosts to settings.php file"
-echo "\$settings['file_private_path'] = '$privatePath';" >> web/settings.php
-echo "\$settings['trusted_host_patterns'] = array('$trustedHosts',);" >> web/settings.php 
-echo "\$base_url = 'http://$siteFolder'; # NO Trailing Slash!" >> web/settings.php 
+{
+  echo "\$settings['file_private_path'] = '$privatePath';"
+  "\$settings['trusted_host_patterns'] = array('$trustedHosts',);"
+  "\$base_url = 'http://$siteFolder'; # NO Trailing Slash!"
+} >> ./web/settings.php
 echo
 echo "copy useful files across and clean up a little"
 cp "$workingFolder/base_files/FixPermissions" ./
@@ -118,26 +116,34 @@ cp "$workingFolder/base_files/runBackdropUpgrade" ./
 echo "Creating a .htaccess access file in DocumentRoot to redirect Document Root to web"
 cp "$workingFolder/base_files/htaccess_docroot" ./.htaccess
 sed -i "s,SITEFOLDER,$siteFolder," .htaccess
-sed -i "s,SITEFOLDER,$siteFolder," exportConfigSync
-sed -i "s,SITEFOLDER,$siteFolder," importConfigSync
 echo "Updating FixPermissions User and Group"
+# shellcheck disable=SC2154
 sed -i "s,USER,$apacheUser," FixPermissions
+# shellcheck disable=SC2154
 sed -i "s,GROUP,$apacheGroup," FixPermissions
 chmod +x FixPermissions
-cd web
-echo 'Install Site using Drush'
-drush si standard \
---db-url="mysql://$dbUser:$dbPwd@localhost:3306/$db" \
---account-name=$acName \
---account-pass=$acPwd \
---account-mail=$acMail \
---site-name="$siteName" \
+cd web || exit
+echo "Fix permissions on install script"
+chmod 755 core/scripts/install.sh
+echo 'Install Site using Bee'
+# shellcheck disable=SC1073
+# shellcheck disable=SC2086
+bee si \
+--auto \
+--db-name=$db \
+--db-user=$dbUser \
+--db-pass=$dbPwd \
+--db-host=localhost \
+--username=$acName \
+--password=$acPwd \
+--email=$acMail \
+--site-name=$siteName \
 --site-mail=$siteMail \
--y
-drush updb
-drush cc all
-echo "There is a bug in the Drush install which does not create the password correctly, so fix here"
-drush upwd $acName --password=$acPwd
+--profile=standard \
+--langcode=en \
+echo
+bee updb
+bee cc all
 cd ..
 echo
 echo "-------------------[ Finished the Install ]-------------------"

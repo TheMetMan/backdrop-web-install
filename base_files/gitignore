@@ -1,5 +1,5 @@
 # the .gitignore file
-# taken from 
+# taken from
 # https://drupal.stackexchange.com/questions/193226/gitignore-file-setup-for-acquia-cloud
 # and modified
 #
@@ -12,9 +12,8 @@
 # Needed by Drush import export scripts and are specific to each site
 config/active
 config/staging
-exportConfigSync
-importConfigSync
 FixPermissions
+private
 
 #ignore Logs
 logs/*
@@ -58,4 +57,7 @@ web/index.php
 
 # Linux trash folder which might appear on any partition or disk.
 .Trash-*
+
+# Ignore Jetbrains project files
+.idea
 
