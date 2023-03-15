@@ -96,11 +96,9 @@ echo "RewriteBase /web" >> web/.htaccess
 sed -i '/config_directories/d' ./web/settings.php
 cat "$workingFolder/base_files/default.settings.xtra" >> ./web/settings.php
 echo "adding Private Files Path and Trusted Hosts to settings.php file"
-{
-  echo "\$settings['file_private_path'] = '$privatePath';"
-  "\$settings['trusted_host_patterns'] = array('$trustedHosts',);"
-  "\$base_url = 'http://$siteFolder'; # NO Trailing Slash!"
-} >> ./web/settings.php
+echo "\$settings['file_private_path'] = '$privatePath';" >> ./web/settings.php
+echo  "\$settings['trusted_host_patterns'] = array('$trustedHosts',);" >> ./web/settings.php
+echo  "\$base_url = 'http://$siteFolder'; # NO Trailing Slash!" >> ./web/settings.php
 echo
 echo "copy useful files across and clean up a little"
 cp "$workingFolder/base_files/FixPermissions" ./
