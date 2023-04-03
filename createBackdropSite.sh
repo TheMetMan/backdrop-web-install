@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 #
 # https://github.com/TheMetMan/backdrop_web_install 
 #

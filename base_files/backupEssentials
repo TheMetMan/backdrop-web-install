@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 #
 # script to backup the Backdrop Database and Essential Settings
 # to a dated folder inside Backups Folder

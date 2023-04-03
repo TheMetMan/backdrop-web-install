@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 #
 # Script to overwrite items from system.core.json file with ignored settings
 # then Sync the database you choose, then

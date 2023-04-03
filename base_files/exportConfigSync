@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 #
 # Script to backup the database and any files you want
 # then copy the database to the config folder
