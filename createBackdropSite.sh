@@ -41,6 +41,7 @@ askfg(){
 configFile=config.cfg.fg
 if [ -e "${configFile}" ]; then
   echo "Using ${configFile} config file"
+  . "${configFile}"
 else
   echo "I cannot find the Config File ${configFile} You MUST create this file"
   exit 1
