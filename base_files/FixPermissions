@@ -25,5 +25,5 @@ find . -type f -name .htaccess -exec chmod u=r,g=r,o=r '{}' \+
 echo "Setting FixPermissions to 750"
 chmod 750 FixPermissions
 chmod 750 backupEssentials
-chmod 700 -- *ConfigSync
+chmod 700 *ConfigSync
 chmod 750 runBackdropUpgrade

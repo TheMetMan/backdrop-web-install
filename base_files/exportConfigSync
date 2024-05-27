@@ -24,7 +24,7 @@ rm config/versioned/*
 cp config/active/* config/versioned/
 cd web || exit
 echo "Dumping Database to config/versioned folder"
-bee db-export ../config/versioned/database.sql
+bee db-export ../config/versioned/database.sql.gz
 echo
 echo "Some Settings will transfer this site data eg Title, Branding emails etc"
 echo "which we do NOT Want, but the importConfigSync script takes care of this"

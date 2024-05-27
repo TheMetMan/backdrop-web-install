@@ -22,8 +22,7 @@ else
     echo "Saving Database and Settings to $DIRECTORY"
     mkdir -p "${DIRECTORY}"
 fi
-# brush sql-dump --gzip --result-file="${DIRECTORY}/database.sql"
-bee db-export "${DIRECTORY}/database.sql"
+bee db-export "${DIRECTORY}/database.sql.gz"
 cp se* "${DIRECTORY}"
 rsync -arz ../config/active "${DIRECTORY}/"
 # Consider other files to backup eg css for the local theme css files
