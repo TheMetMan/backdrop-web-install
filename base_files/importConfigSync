@@ -2,9 +2,11 @@
 #
 # Script to overwrite items from system.core.json file with ignored settings
 # then Sync the database you choose, then
-# Import Backdrop Settings using Drush 8
+# Import Backdrop Settings using Bee
 #
-# Backup the site Database and Settings
+# 2025-06-01 Fixing Sandbox Line in first line of Database Dump
+#       as per this: https://mariadb.org/mariadb-dump-file-compatibility-change/
+#       and this: https://github.com/backdrop-contrib/bee/issues/384
 #
 # 2023-03-04 changed from Brush to Bee
 #
@@ -15,6 +17,21 @@ site_folder() {
   IFS='/' read -ra DIR <<< "$DIR_PATH"
   echo "${DIR[-1]}"
 } # End of site_folder
+fix_db_error() {
+  # Unzip the db
+  gunzip config/versioned/database.sql.gz
+  result=$(head -n1 config/versioned/database.sql | grep '999999')
+  if [[ $result != '' ]]; then
+        echo 'Line Present, so deleting it';
+        sed -i '1d' config/versioned/database.sql
+  fi
+  echo 'First line is now:'
+  head -n1 config/versioned/database.sql
+  # Zip it up again
+  gzip config/versioned/database.sql
+  # update git
+  git commit -am "Modified Database for first line error"
+}
 echo
 echo "Backup the site Database and Settings"
 ./backupEssentials "$(site_folder)"
@@ -26,6 +43,7 @@ cp config/versioned/*.json config/staging/
 echo "Removing Unnecessary Settings from system.core.json"
 php config/ignoreSettings.php
 echo
+fix_db_error
 cd web || exit
 echo "Importing the Database"
 echo
