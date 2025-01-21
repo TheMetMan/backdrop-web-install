@@ -4,8 +4,6 @@
 # to a dated folder inside Backups Folder
 #
 # 2024-10-06 had to fix the MySQL Sandbox problem found here https://mariadb.org/mariadb-dump-file-compatibility-change/
-#               and also in my odt file /home/francis/storage/Francis/Computing/Backdrop/MariaDB_Dump_File_Compatibility_Change.odt
-#               by removing the first line
 #
 # 2023-03-04 changed from Brush to Bee
 #
