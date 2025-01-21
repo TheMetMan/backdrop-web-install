@@ -41,6 +41,7 @@ askfg(){
 configFile=config.cfg.fg
 if [ -e "${configFile}" ]; then
   echo "Using ${configFile} config file"
+  . "${configFile}"
 else
   echo "I cannot find the Config File ${configFile} You MUST create this file"
   exit 1
@@ -64,7 +65,7 @@ if [ -d "$siteFolder" ]; then
 #  exit 1
 fi
 if askfg "Do you really want to continue?" ; then
-    echo "Installing now"
+    echo "Installing now to ${apacheRoot}/${siteFolder}/web"
     mkdir -p "${apacheRoot}/${siteFolder}/web"
   else
     exit 1

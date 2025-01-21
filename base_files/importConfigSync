@@ -2,7 +2,7 @@
 #
 # Script to overwrite items from system.core.json file with ignored settings
 # then Sync the database you choose, then
-# Import Backdrop Settings using Drush 8
+# Import Backdrop Settings using Bee
 #
 # Backup the site Database and Settings
 #
